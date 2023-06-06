@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+//3軸ロボットアームでの逆運動学の実装
 namespace InverseKinematics
 {
-    public class JointController: MonoBehaviour
+    public class JointController_X90r: MonoBehaviour
     {
         //robot
         private GameObject[] joint = new GameObject[3];
@@ -24,8 +26,6 @@ namespace InverseKinematics
         {
             //check();
             //robot
-
-
             for(int i = 0; i<joint.Length; i++)
             {
                 joint[i] = GameObject.Find("Joint_"+i.ToString());
@@ -33,6 +33,10 @@ namespace InverseKinematics
                 if(i==0) armL[i] = arm[i].transform.localScale.y;
                 else armL[i] = arm[i].transform.localScale.x;
             }
+            
+            //ベースの回転の修正
+            //結局ダメだった
+            //joint[0].transform.Rotate(-90, 0, 0);
 
             //UIsetting
             for(int i =0; i<joint.Length;i++)
@@ -52,10 +56,25 @@ namespace InverseKinematics
             {
                 sliderVal[i]= slider[i].GetComponent<Slider>().value;
             }
+
+            /*
+            //ローカル座標系 
+            //結局ばぐったのでワールド座標系でやることにした
+            Vector3 localTargetPosition = joint[0].transform.InverseTransformPoint(new Vector3(sliderVal[0], sliderVal[1], sliderVal[2]));
+            float x = localTargetPosition.x;
+            float y = localTargetPosition.y;
+            float z = localTargetPosition.z;
+            */
+
+            
+            //ワールド座標系
+            //sliderの値をワールド座標系に変換
             float x = sliderVal[0];
             float y = sliderVal[1];
             float z = sliderVal[2];
-
+            
+            //逆運動学の計算
+            /*-----------------------------------------------------------------------------------------------------------------*/
             angle[0].y = -Mathf.Atan2(z,x);
 
             float a = x / Mathf.Cos(angle[0].y);
@@ -84,10 +103,14 @@ namespace InverseKinematics
                     posText[i].GetComponent<Text>().text = sliderVal[i].ToString("f2");
                     prevSliderVal[i] = sliderVal[i];
                 }
-                    angText[0].GetComponent<Text>().text = ( angle[0].z * Mathf.Rad2Deg).ToString("f2");
-                    angText[1].GetComponent<Text>().text = ( angle[1].z * Mathf.Rad2Deg).ToString("f2");
-                    angText[2].GetComponent<Text>().text = ( angle[1].z * Mathf.Rad2Deg).ToString("f2");
+                //joint[0].transform.localEulerAngles = new Vector3(-90, joint[0].transform.localEulerAngles.y, joint[0].transform.localEulerAngles.z);
+
+                angText[0].GetComponent<Text>().text = ( angle[0].z * Mathf.Rad2Deg).ToString("f2");
+                angText[1].GetComponent<Text>().text = ( angle[1].z * Mathf.Rad2Deg).ToString("f2");
+                angText[2].GetComponent<Text>().text = ( angle[1].z * Mathf.Rad2Deg).ToString("f2");
             }
+
+            /*-----------------------------------------------------------------------------------------------------------------*/
         }
         
     }

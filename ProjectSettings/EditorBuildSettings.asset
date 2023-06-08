@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/3-axis_robot_arm.unity
     guid: 2f9d55ab4612141eebc10492002afd44
+  - enabled: 1
+    path: Assets/6-axis_robot_arm.unity
+    guid: ce948429a2b114a07a7ea2f154dc1f9f
   m_configObjects: {}
